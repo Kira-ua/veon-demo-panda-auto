@@ -1,0 +1,94 @@
+---
+// #kontakty: big numbers, channels as large targets, two pickup points with hours next to the address, the VIN action again.
+import Icon from "./Icon.astro";
+import { contacts, points, socials, waLink } from "../data/site";
+---
+<section id="kontakty" class="kont" data-rec="R-101,S-R012">
+  <div class="kont__in container">
+    <div class="kont__call">
+      <h2 class="h2">Контакти</h2>
+      <ul class="kont__phones">
+        {contacts.phones.map((p, i) => <li><a class="kont__phone" href={p.href}>{p.text}</a>{i < contacts.phones.length - 1 && <span class="visually-hidden">;</span>}</li>)}
+      </ul>
+      <p class="kont__hours-h">Колл-центр</p>
+      <dl class="kont__ph kont__hours">
+        {contacts.callCenter.map((h) => <div><dt>{h.days}</dt><dd>{h.time}</dd></div>)}
+      </dl>
+      <a class="kont__mail link" href={contacts.email.href}><Icon name="mail" />{contacts.email.text}</a>
+      <ul class="kont__channels" data-rec="R-102">
+        <li><a class="btn btn--secondary" href={waLink()} target="_blank" rel="noopener"><Icon name="chat" />WhatsApp</a></li>
+        <li><a class="btn btn--secondary" href={contacts.telegram} target="_blank" rel="noopener"><Icon name="send" />Telegram</a></li>
+        <li class="kont__viber" data-rec="R-109">
+          <a class="btn btn--secondary" href={contacts.viber.href}><Icon name="viber" />Viber {contacts.viber.text}</a>
+          <span class="kont__viber-note">окрема лінія Viber</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="kont__points" data-rec="R-113">
+      {points.map((p) => (
+        <article class="kont__point">
+          <h3 class="kont__city">{p.city}</h3>
+          <p class="kont__addr">{p.address}</p>
+          <p class="kont__pnote">{p.note}</p>
+          <dl class="kont__ph">
+            {p.hours.map((h) => <div><dt>{h.days}</dt><dd>{h.time}</dd></div>)}
+          </dl>
+          <a class="kont__map link-grow" href={p.map} target="_blank" rel="noopener"><Icon name="pin" />Маршрут</a>
+        </article>
+      ))}
+    </div>
+
+    <div class="kont__end">
+      <a class="btn btn--primary on-light" href="#kontakty" data-sheet-open data-rec="R-102">Підібрати деталь за VIN</a>
+      <ul class="kont__social" aria-label="Соцмережі">
+        {socials.map((s) => <li><a class="link-grow" href={s.href} target="_blank" rel="noopener">{s.name}</a></li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .kont { background: var(--color-snow); padding-block: var(--section-y-lg) var(--section-y); border-top: var(--hairline) solid var(--color-line); }
+  .kont__in { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-7); }
+  .kont__phones { display: grid; gap: var(--space-1); margin-top: var(--space-5); }
+  .kont__phone {
+    display: inline-flex; align-items: center; min-height: var(--target);
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 800; font-size: var(--text-40); line-height: 1;
+    color: var(--color-bamboo); text-decoration: none; white-space: nowrap;
+  }
+  .kont__phone:hover { text-decoration: underline; text-decoration-thickness: var(--border); text-underline-offset: 0.12em; }
+  .kont__hours-h { margin-top: var(--space-4); font-size: var(--text-15); font-weight: 600; }
+  .kont__hours { margin-top: var(--space-1); }
+  .kont__mail { display: inline-flex; align-items: center; gap: var(--space-2); margin-top: var(--space-4); min-height: var(--target); font-size: var(--text-17); color: var(--color-ink); }
+  .kont__mail .icon { width: 20px; height: 20px; color: var(--color-bamboo); }
+  .kont__channels { display: grid; gap: var(--space-3); margin-top: var(--space-5); max-width: 420px; }
+  .kont__channels .btn { width: 100%; min-height: var(--control-lg); justify-content: flex-start; }
+  .kont__viber-note { display: block; margin-top: var(--space-1); font-size: var(--text-14); color: var(--color-muted); }
+
+  .kont__points { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); }
+  .kont__point { border-top: var(--border) solid var(--color-ink); padding-top: var(--space-4); }
+  .kont__city { font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 800; font-size: var(--text-40); line-height: 1; }
+  .kont__addr { margin-top: var(--space-3); font-size: var(--text-17); font-weight: 600; }
+  .kont__pnote { font-size: var(--text-15); color: var(--color-muted); }
+  .kont__ph { display: grid; gap: var(--space-1); margin-top: var(--space-3); font-variant-numeric: tabular-nums; font-size: var(--text-16); }
+  .kont__ph div { display: flex; gap: var(--space-3); }
+  .kont__ph dt { min-width: 4.5em; color: var(--color-muted); }
+  .kont__map { white-space: nowrap; display: inline-flex; align-items: center; gap: var(--space-2); margin-top: var(--space-4); min-height: var(--target); color: var(--color-bamboo); font-weight: 600; }
+  .kont__map .icon { width: 20px; height: 20px; }
+
+  .kont__end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-5); padding-top: var(--space-6); border-top: var(--hairline) solid var(--color-line); }
+  .kont__social { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-5); }
+  .kont__social a { display: inline-flex; align-items: center; min-height: var(--target); color: var(--color-ink); font-weight: 500; }
+
+  @media (min-width: 768px) {
+    .kont__points { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--gutter); }
+    .kont__phone { font-size: var(--text-48); }
+  }
+  @media (min-width: 1024px) {
+    .kont__in { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+    .kont__call { grid-column: 1 / 6; }
+    .kont__points { grid-column: 7 / 13; align-self: start; margin-top: var(--space-9); }
+    .kont__end { grid-column: 1 / 13; }
+  }
+</style>

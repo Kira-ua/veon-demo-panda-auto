@@ -1,0 +1,54 @@
+---
+// #garantiia: manufacturer terms left (C-013), the one panel of the page — Panda Plus — right (C-015). No return term (R-107).
+import FutureLink from "./FutureLink.astro";
+const prices = [
+  { range: "200–1000 грн", price: "109 грн" },
+  { range: "1001–3000 грн", price: "229 грн" },
+  { range: "3001–6000 грн", price: "349 грн" },
+];
+---
+<section id="garantiia" class="gar" data-rec="R-106">
+  <div class="gar__in container">
+    <div class="gar__base">
+      <h2 class="h2">Гарантія 3, 6 або 12 місяців — за умовами виробника</h2>
+      <p class="gar__cond">Гарантія діє, якщо деталь встановлено на сертифікованому СТО.</p>
+      <FutureLink class="gar__more">Умови гарантії і повернення</FutureLink>
+    </div>
+    <div class="gar__plus on-dark">
+      <p class="gar__plus-big" aria-hidden="true">+1 рік</p>
+      <h3 class="gar__plus-h">Panda Plus — платне продовження гарантії на 1 рік</h3>
+      <table class="gar__table">
+        <caption class="visually-hidden">Вартість Panda Plus залежно від ціни товару</caption>
+        <thead><tr><th scope="col">Ціна товару</th><th scope="col">Panda Plus</th></tr></thead>
+        <tbody>
+          {prices.map((p) => <tr><td>{p.range}</td><td>{p.price}</td></tr>)}
+        </tbody>
+      </table>
+      <p class="gar__plus-note">Покриває і встановлення в гаражі. Без грошового повернення.</p>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .gar { background: var(--color-snow); padding-block: var(--section-y-lg) var(--section-y); }
+  .gar__in { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-7); align-items: start; }
+  .gar__cond { margin-top: var(--space-5); max-width: 46ch; font-size: var(--text-20); }
+  .gar__more { margin-top: var(--space-5); color: var(--color-bamboo); font-weight: 600; min-height: var(--target); }
+  .gar__plus { background: var(--color-bamboo); color: var(--color-snow); border-radius: var(--radius); padding: var(--space-6) var(--space-5); }
+  .gar__plus-big {
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 800; font-size: var(--text-plus); line-height: .95;
+    color: var(--color-lime);
+  }
+  .gar__plus-h { margin-top: var(--space-4); font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 700; font-size: var(--text-28); line-height: 1.1; }
+  .gar__table { width: 100%; margin-top: var(--space-5); font-variant-numeric: tabular-nums; }
+  .gar__table th { text-align: left; font-size: var(--text-14); font-weight: 600; color: var(--color-mint); padding-bottom: var(--space-2); }
+  .gar__table td { padding-block: var(--space-3); border-top: var(--hairline) solid var(--color-mint); }
+  .gar__table th:last-child, .gar__table td:last-child { text-align: right; }
+  .gar__table td:last-child { font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 700; font-size: var(--text-28); line-height: 1; }
+  .gar__plus-note { margin-top: var(--space-4); color: var(--color-mint); font-size: var(--text-16); }
+  @media (min-width: 1024px) {
+    .gar__in { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+    .gar__base { grid-column: 1 / 7; }
+    .gar__plus { grid-column: 8 / 13; padding: var(--space-7); }
+  }
+</style>

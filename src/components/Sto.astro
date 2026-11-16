@@ -1,0 +1,45 @@
+---
+// #sto: special terms for service stations and shops (C-008); only facts from client.json, terms are discussed with the manager.
+import Icon from "./Icon.astro";
+import { contacts } from "../data/site";
+const facts = [
+  "Підбір за VIN через менеджера",
+  "Відправка в день замовлення",
+  "Оплата за реквізитами",
+  "Нова пошта, Укрпошта, Rozetka, Delivery",
+];
+---
+<section id="sto" class="sto on-dark" data-rec="R-108">
+  <div class="sto__in container">
+    <h2 class="h2 sto__h2">Для СТО, автомагазинів і сервісів — спеціальні умови</h2>
+    <div class="sto__body">
+      <ul class="sto__list">
+        {facts.map((f) => <li>{f}</li>)}
+      </ul>
+      <p class="sto__note">Умови обговорює менеджер.</p>
+      <div class="sto__actions">
+        <a class="btn btn--primary" href={contacts.phones[0].href}><Icon name="phone" />Обговорити умови</a>
+        <a class="btn btn--outline" href={contacts.telegram} target="_blank" rel="noopener"><Icon name="send" />Telegram</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .sto { background: var(--color-bamboo); color: var(--color-snow); padding-block: var(--section-y-lg); }
+  .sto__in { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-7); }
+  .sto__h2 { max-width: 16ch; }
+  .sto__list li {
+    padding-block: var(--space-3); border-top: var(--hairline) solid var(--color-mint);
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 600; font-size: var(--text-22); line-height: 1.2;
+  }
+  .sto__note { margin-top: var(--space-5); color: var(--color-mint); }
+  .sto__actions { display: grid; gap: var(--space-3); margin-top: var(--space-5); }
+  @media (min-width: 560px) { .sto__actions { grid-template-columns: max-content max-content; } }
+  @media (min-width: 1024px) {
+    .sto__in { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+    .sto__h2 { grid-column: 1 / 7; }
+    .sto__body { grid-column: 8 / 13; }
+    .sto__list li { font-size: var(--text-28); }
+  }
+</style>

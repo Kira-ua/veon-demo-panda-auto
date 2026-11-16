@@ -1,0 +1,185 @@
+---
+// #pidbir: the wall becomes a tool. Tabs «Китайські авто / Електромобілі» → brand → model → prepared message to the manager.
+// Without JS every brand's models are listed one after another and the panel offers the plain channels.
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import { brands, contacts, modelCount, modelsWord, waLink } from "../data/site";
+const groups = [
+  { id: "china", tab: "Китайські авто", list: brands.filter((b) => b.group === "china") },
+  { id: "ev", tab: "Електромобілі", list: brands.filter((b) => b.group === "ev") },
+];
+---
+<section id="pidbir" class="pidbir" data-rec="R-102,R-112" data-pidbir>
+  <div class="container">
+    <h2 class="h2 pidbir__h2">Знайдіть своє авто: {brands.length} марок, {modelCount} моделей</h2>
+
+    <div class="pidbir__grid">
+      <div class="pidbir__side">
+        <div class="pidbir__tabs" role="tablist" aria-label="Тип авто">
+          {groups.map((g, i) => (
+            <button class="pidbir__tab" type="button" role="tab" id={`tab-${g.id}`} aria-controls={`brands-${g.id}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-tab={g.id}>{g.tab}</button>
+          ))}
+        </div>
+        {groups.map((g) => (
+          <div class="pidbir__brands" role="tabpanel" id={`brands-${g.id}`} aria-labelledby={`tab-${g.id}`} data-tabpanel={g.id}>
+            <ul>
+              {g.list.map((b) => (
+                <li>
+                  <button class="pbrand" type="button" aria-pressed="false" aria-controls={`pidbir-${b.slug}`} data-brand={b.slug}>
+                    <span class="pbrand__name">{b.label}</span>
+                    <span class="pbrand__count">{b.models.length} {modelsWord(b.models.length)}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div class="pidbir__main">
+        {brands.map((b) => (
+          <div class="pmodels" id={`pidbir-${b.slug}`} data-models={b.slug} data-group={b.group}>
+            <h3 class="pmodels__title">{b.label}: {b.models.length} {modelsWord(b.models.length)}</h3>
+            <ul class="pmodels__list">
+              {b.models.map((m, i) => (
+                <li style={`--i:${i}`}><button class="pmodel" type="button" aria-pressed="false" data-car={`${b.name} ${m}`} data-model={m}>{m}</button></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+
+        <div class="pask" data-ask>
+          <p class="pask__empty" data-ask-empty>Оберіть модель — підготуємо повідомлення менеджеру</p>
+          <div class="pask__ready" data-ask-ready aria-live="polite">
+            <p class="pask__car" data-ask-car>Деталь на ваше авто</p>
+            <p class="pask__title">Надішліть VIN або фото техпаспорта, менеджер перевірить сумісність.</p>
+            <div class="pask__actions">
+              <a class="btn btn--secondary" href={waLink()} target="_blank" rel="noopener" data-ask-wa data-rec="R-102"><Icon name="chat" />Написати в WhatsApp</a>
+              <a class="btn btn--secondary" href={contacts.telegram} target="_blank" rel="noopener"><Icon name="send" />Telegram</a>
+              <a class="btn btn--secondary" href={contacts.viber.href} data-rec="R-109"><Icon name="viber" />Viber {contacts.viber.text}</a>
+            </div>
+            <FutureLink class="pask__catalog"><span data-ask-catalog>Каталог запчастин моделі</span></FutureLink>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="pidbir__flow">
+      <span class="pidbir__step">VIN або фото техпаспорта</span><span class="pidbir__step"><span class="pidbir__arrow" aria-hidden="true">→&nbsp;</span>менеджер перевіряє сумісність і наявність</span><span class="pidbir__step"><span class="pidbir__arrow" aria-hidden="true">→&nbsp;</span>відправка в день замовлення</span>
+    </p>
+  </div>
+</section>
+
+<style is:global>
+  .pidbir { background: var(--color-paper); padding-block: var(--section-y-lg) var(--section-y); }
+  .pidbir__h2 { max-width: 18ch; }
+  .pidbir__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); margin-top: var(--space-7); }
+
+  .pidbir__tabs { display: grid; grid-template-columns: 1fr 1fr; border: var(--border) solid var(--color-bamboo); border-radius: var(--radius); }
+  .pidbir__tab {
+    min-height: var(--control); padding: 0 var(--space-3); border: 0; background: transparent; cursor: pointer;
+    font-size: var(--text-15); font-weight: 600; color: var(--color-bamboo); white-space: nowrap;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .pidbir__tab[aria-selected="true"] { background: var(--color-bamboo); color: var(--color-snow); }
+  .pidbir__tab:hover:not([aria-selected="true"]) { background: var(--color-snow-hover); }
+  html:not(.js) .pidbir__tabs { display: none; }
+
+  .pidbir__brands ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr)); gap: var(--space-1); margin-top: var(--space-4); }
+  .pidbir__brands[hidden] { display: none; }
+  @media (max-width: 767px) {
+    .js .pidbir__brands ul {
+      display: flex; gap: var(--space-2); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity;
+      margin-inline: calc(-1 * var(--page-pad)); padding: 0 var(--page-pad) var(--space-2); scrollbar-width: thin;
+    }
+    .js .pidbir__brands li { flex: none; scroll-snap-align: start; }
+    .js .pbrand { border: var(--hairline) solid var(--color-line); }
+  }
+  .pbrand {
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: center; width: 100%; min-height: var(--control);
+    padding: var(--space-3) var(--space-3); border: 0; border-radius: var(--radius); background: transparent; color: var(--color-ink);
+    text-align: left; cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .pbrand__name { white-space: nowrap; font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 700; font-size: var(--text-22); line-height: 1.05; }
+  .pbrand__count { font-size: var(--text-14); color: var(--color-muted); white-space: nowrap; }
+  .pbrand:hover { background: var(--color-snow-hover); }
+  .pbrand[aria-pressed="true"] { background: var(--color-bamboo); color: var(--color-snow); --focus-ring: var(--color-ink); }
+  .pbrand[aria-pressed="true"] .pbrand__count { color: var(--color-mint); }
+  html:not(.js) .pidbir__side { display: none; }
+
+  .pmodels + .pmodels { margin-top: var(--space-6); }
+  .js .pmodels + .pmodels { margin-top: 0; }
+  .pmodels[hidden] { display: none; }
+  .pmodels__title { font-size: var(--text-16); font-weight: 600; color: var(--color-muted); }
+  .js .pmodels__title { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .pmodels__list { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-2); margin-top: var(--space-2); }
+  .js .pmodels__list { margin-top: 0; }
+  .pmodel {
+    position: relative; min-height: var(--target); padding: var(--space-1) var(--space-2);
+    border: 0; border-radius: var(--radius); background: transparent; cursor: pointer; color: var(--color-ink);
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 600; font-size: var(--text-22); line-height: 1.1;
+    transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .pmodel::after {
+    content: ""; position: absolute; left: var(--space-2); right: var(--space-2); bottom: var(--space-1); height: var(--border);
+    background: var(--color-bamboo); transform: scaleX(0); transform-origin: left; transition: transform var(--dur-micro) var(--ease-out);
+  }
+  .pmodel:hover::after { transform: scaleX(1); }
+  .pmodel[aria-pressed="true"] { background: var(--color-ink); color: var(--color-lime); --focus-ring: var(--color-bamboo); }
+  .pmodel[aria-pressed="true"]::after { transform: scaleX(0); }
+  .pmodel:active { transform: translateY(1px); }
+
+  .pask { margin-top: var(--space-5); }
+  html:not(.js) .pask, .pask.is-ready { padding: var(--space-5); background: var(--color-snow); border-radius: var(--radius); border: var(--hairline) solid var(--color-line); }
+  .pask__empty { color: var(--color-muted); font-size: var(--text-16); }
+  html:not(.js) .pask__empty { display: none; }
+  .js .pask:not(.is-ready) .pask__ready { display: none; }
+  .js .pask.is-ready .pask__empty { display: none; }
+  .pask__title { font-size: var(--text-17); max-width: 52ch; }
+  .pask__car { font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 800; font-size: var(--text-28); line-height: 1.05; margin-bottom: var(--space-2); overflow-wrap: break-word; }
+  .pask__actions { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
+  .pask__catalog { margin-top: var(--space-4); font-size: var(--text-15); color: var(--color-muted); min-height: var(--target); }
+  /* On a phone the panel sits right under the chosen model (moved there by main.ts) */
+  .pask-li { flex: 1 0 100%; }
+  .pask-li > .pask { margin-block: var(--space-2) var(--space-3); }
+
+  .pidbir__flow {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-1) var(--space-3);
+    margin-top: var(--space-7); padding-top: var(--space-5); border-top: var(--hairline) solid var(--color-line);
+    font-size: var(--text-16); color: var(--color-ink);
+  }
+  .pidbir__arrow { color: var(--color-bamboo); font-weight: 700; }
+  @media (max-width: 767px) { .pidbir__flow { flex-direction: column; align-items: flex-start; } }
+
+  /* Motion #2: models of a new brand come in (opacity + 8px, 15ms step, ≤300ms); the panel opens with clip-path */
+  @media (prefers-reduced-motion: no-preference) {
+    .pmodels.is-entering li { animation: pm-in 200ms var(--ease-out) both; animation-delay: min(calc(var(--i) * 15ms), 100ms); }
+    .pask.is-opening { animation: pask-open 260ms var(--ease-out) both; }
+  }
+  @media (prefers-reduced-motion: no-preference) and (max-width: 767px) {
+    .pmodels.is-entering li { animation-delay: 0ms; }
+  }
+  @keyframes pm-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes pask-open { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+
+  @media (min-width: 560px) {
+    .pask__actions { grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), max-content)); }
+  }
+  @media (min-width: 768px) {
+    .pidbir__brands ul { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); }
+    .pmodel { font-size: var(--text-28); }
+  }
+  @media (min-width: 1024px) {
+    .pidbir__side { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start; }
+    .pidbir__tabs { grid-column: 1 / 4; grid-row: 1; }
+    .pidbir__brands { grid-column: 4 / 13; grid-row: 1; }
+    .pidbir__brands ul { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 var(--gutter); margin-top: 0; }
+    .pidbir__main { padding-top: var(--space-5); border-top: var(--hairline) solid var(--color-line); }
+    .pmodels__list { gap: var(--space-1) var(--space-3); }
+    .pbrand { flex-direction: row; align-items: baseline; justify-content: space-between; gap: var(--space-3); padding-inline: var(--space-4); }
+    .pbrand__name { font-size: var(--text-28); }
+    .pmodel { font-size: var(--text-40); padding-inline: var(--space-3); }
+    html:not(.js) .pask, .pask.is-ready { padding: var(--space-6); }
+  }
+</style>

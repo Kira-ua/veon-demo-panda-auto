@@ -1,0 +1,56 @@
+---
+// The signature: all 120 model names of the Panda catalogue (C-025) set as a dense wall of type in the hero.
+// Drawn as SVG text laid out at build time from widths measured in Tektur (src/data/wall-metrics.json),
+// so it reads as one picture; the accessible list of the same models lives in #pidbir (aria-hidden here).
+import { brands, wallOrder } from "../data/site";
+import metrics from "../data/wall-metrics.json";
+
+const W = 540;          // viewBox width
+const FS = 26;          // font size in viewBox units
+const LH = 33;          // line height
+const GAP = FS * 0.62;  // gap between names
+const k = FS / 100;
+const brandW = metrics.brand as Record<string, number>;
+const modelW = metrics.model as Record<string, number>;
+
+type Item = { text: string; brand: boolean; x: number; w: number; slug: string };
+const items: { text: string; brand: boolean; w: number; slug: string }[] = [];
+for (const slug of wallOrder) {
+  const b = brands.find((x) => x.slug === slug)!;
+  items.push({ text: b.name, brand: true, slug: b.slug, w: (brandW[b.name] ?? b.name.length * 52) * k });
+  for (const m of b.models) items.push({ text: m, brand: false, slug: b.slug, w: (modelW[m] ?? m.length * 48) * k });
+}
+const lines: Item[][] = [[]];
+let x = 0;
+for (const it of items) {
+  if (x > 0 && x + it.w > W) { lines.push([]); x = 0; }
+  lines[lines.length - 1].push({ ...it, x });
+  x += it.w + GAP;
+}
+const H = lines.length * LH + 8;
+const r = (n: number) => Math.round(n * 10) / 10;
+---
+<svg class="wall" data-wall viewBox={`0 0 ${W} ${H}`} width={W} height={H} aria-hidden="true" focusable="false" preserveAspectRatio="xMinYMin meet">
+  {lines.map((line, i) => (
+    <g class="wall__line" style={`--i:${i}`}>
+      {line.map((it) => (
+        <text class={it.brand ? "wall__brand" : "wall__model"} x={r(it.x)} y={r(i * LH + FS)} textLength={r(it.w)} lengthAdjust="spacingAndGlyphs" data-pick={it.slug} data-model={it.brand ? undefined : it.text}>{it.text}</text>
+      ))}
+    </g>
+  ))}
+</svg>
+
+<style is:global>
+  .wall { width: 100%; height: auto; overflow: visible; }
+  .wall text { font-family: var(--font-display); font-stretch: var(--wdth-display); font-size: 26px; }
+  .wall__model { fill: var(--color-mint); font-weight: 500; }
+  .wall__brand { fill: var(--color-snow); font-weight: 800; }
+  /* Mouse shortcut into #pidbir (main.ts); keyboard and screen readers use the brand index below and #pidbir itself */
+  .js .wall text { cursor: pointer; transition: fill var(--dur-fast) var(--ease-out); }
+  .js .wall text:hover { fill: var(--color-lime); }
+  /* Motion #1: one wave on load, opacity .35 → 1, about 900ms in total. CSS only, runs without JS. */
+  @media (prefers-reduced-motion: no-preference) {
+    .wall__line { animation: wall-wave 360ms var(--ease-out) both; animation-delay: calc(var(--i) * 26ms); }
+  }
+  @keyframes wall-wave { from { opacity: .35; } to { opacity: 1; } }
+</style>

@@ -1,0 +1,54 @@
+---
+// Footer: ink, logo → #top, anchors, future pages, socials, «© Panda Auto» (no legal name: C-002).
+import FutureLink from "./FutureLink.astro";
+import { socials } from "../data/site";
+const anchors = [
+  { href: "#pidbir", text: "Підбір" },
+  { href: "#hrupy", text: "Групи запчастин" },
+  { href: "#dostavka", text: "Доставка й оплата" },
+  { href: "#garantiia", text: "Гарантія" },
+  { href: "#sto", text: "Для СТО" },
+  { href: "#kontakty", text: "Контакти" },
+];
+const future = ["Акції", "Новини", "Про нас", "Виробники", "Кабінет", "Кошик"];
+---
+<footer id="footer" class="ftr on-dark">
+  <div class="ftr__in container">
+    <a class="ftr__logo" href="#top" aria-label="Panda Auto Parts, на початок сторінки">
+      <img src={`${import.meta.env.BASE_URL}panda-logo-white.svg`.replace(/\/\/+/g,"/")} alt="" width="116" height="40" loading="lazy" />
+    </a>
+    <nav class="ftr__col ftr__c1" aria-label="Розділи головної">
+      <ul>{anchors.map((a) => <li><a class="link-grow" href={a.href}>{a.text}</a></li>)}</ul>
+    </nav>
+    <div class="ftr__col ftr__c2">
+      <ul>{future.map((f, i) => <li><FutureLink end={i % 2 === 1}>{f}</FutureLink></li>)}</ul>
+    </div>
+    <div class="ftr__col ftr__c3">
+      <ul aria-label="Соцмережі">{socials.map((s) => <li><a class="link-grow" href={s.href} target="_blank" rel="noopener">{s.name}</a></li>)}</ul>
+    </div>
+    <p class="ftr__copy">© Panda Auto</p>
+  </div>
+</footer>
+
+<style is:global>
+  .ftr { background: var(--color-ink); color: var(--color-snow); padding-block: var(--space-8) var(--space-6); }
+  .ftr__in { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6) var(--gutter); }
+  .ftr__logo { grid-column: 1 / -1; justify-self: start; border-radius: var(--radius); }
+  .ftr__logo img { height: 40px; width: auto; }
+  .ftr__col ul { display: grid; }
+  .ftr__col a, .ftr__col .future-link { display: inline-flex; align-items: center; min-height: var(--target); font-size: var(--text-16); color: var(--color-snow); }
+  .ftr__col .future-link { color: var(--color-mint); }
+  .ftr__c3 { grid-column: 1 / -1; }
+  .ftr__c3 ul { display: flex; flex-wrap: wrap; column-gap: var(--space-5); }
+  .ftr__copy { grid-column: 1 / -1; padding-top: var(--space-5); border-top: var(--hairline) solid var(--color-muted); color: var(--color-mint); font-size: var(--text-14); }
+  .ftr__col a, .ftr__col .future-link { white-space: nowrap; }
+  @media (min-width: 420px) { .ftr__in { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  @media (min-width: 1024px) {
+    .ftr__in { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    .ftr__logo { grid-column: 1 / 4; }
+    .ftr__c1 { grid-column: 5 / 8; }
+    .ftr__c2 { grid-column: 8 / 11; }
+    .ftr__c3 { grid-column: 11 / 13; }
+    .ftr__c3 ul { display: grid; }
+  }
+</style>

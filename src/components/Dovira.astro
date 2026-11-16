@@ -1,0 +1,37 @@
+---
+// #dovira: lime ribbon glued to the first screen, four facts of different width, each an anchor to its block (C-010, C-013, C-015).
+const facts = [
+  { big: "17:00", cap: "відправка в день замовлення, у суботу до 14:00", href: "#dostavka" },
+  { big: "4 перевізники", cap: "Нова пошта, Укрпошта, Rozetka, Delivery", href: "#dostavka" },
+  { big: "3–12 міс.", cap: "гарантія за умовами виробника", href: "#garantiia" },
+  { big: "+1 рік", cap: "Panda Plus, платне продовження гарантії", href: "#garantiia" },
+];
+---
+<section id="dovira" class="dovira on-lime" aria-label="Доставка й гарантія коротко" data-rec="R-106">
+  <ul class="dovira__in container">
+    {facts.map((f) => (
+      <li>
+        <a class="dovira__fact" href={f.href}>
+          <span class="dovira__big">{f.big}</span>
+          <span class="dovira__cap">{f.cap}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style is:global>
+  .dovira { background: var(--color-lime); color: var(--color-ink); }
+  .dovira__in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-5) var(--space-5); padding-block: var(--space-6); }
+  .dovira__fact { display: grid; gap: var(--space-1); text-decoration: none; color: inherit; border-radius: var(--radius); }
+  .dovira__big {
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 800; font-size: var(--text-28); line-height: 1;
+    overflow-wrap: break-word; min-width: 0;
+  }
+  .dovira__cap { font-size: var(--text-15); line-height: 1.4; max-width: 30ch; }
+  .dovira__fact:hover .dovira__big { text-decoration: underline; text-decoration-thickness: var(--border); text-underline-offset: 0.12em; }
+  @media (min-width: 1024px) {
+    .dovira__in { display: flex; justify-content: space-between; gap: var(--space-7); padding-block: var(--space-6) var(--space-7); }
+    .dovira__big { font-size: var(--text-40); }
+  }
+</style>

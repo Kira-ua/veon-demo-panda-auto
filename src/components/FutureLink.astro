@@ -1,0 +1,12 @@
+---
+// A future page that is not built in the demo yet (menu item, button, group, footer link).
+// Renders an inactive element with a short note instead of a link: never point it to the client's current site.
+import { FUTURE } from "../data/site";
+interface Props { note?: string; class?: string; end?: boolean; rec?: string; label?: string; }
+const { note = FUTURE, class: cls, end = false, rec, label } = Astro.props;
+---
+<span class:list={["future-link", end && "future-link--end", cls]} role="link" aria-disabled="true" tabindex="0" data-rec={rec} aria-label={label ? `${label} (${note})` : undefined}>
+  <slot />
+  <span class="future-link__note" aria-hidden="true">{note}</span>
+  {!label && <span class="visually-hidden">({note})</span>}
+</span>

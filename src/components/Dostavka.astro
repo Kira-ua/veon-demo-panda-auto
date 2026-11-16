@@ -1,0 +1,75 @@
+---
+// #dostavka: giant 17:00 left, carriers table right (C-010), courier (C-011) and payment (C-012) below.
+import FutureLink from "./FutureLink.astro";
+const cols = ["Накладений платіж", "Обрешітка", "Скло", "Обмеження"];
+const rows = [
+  { name: "Нова пошта", cells: ["так", "так", "так", "—"] },
+  { name: "Укрпошта", cells: ["так", "—", "—", "—"] },
+  { name: "Rozetka", cells: ["так", "—", "—", "до 15 кг"] },
+  { name: "Delivery", cells: ["ні", "так", "—", "без накладеного платежу"] },
+];
+---
+<section id="dostavka" class="dost" data-rec="R-106">
+  <div class="dost__in container">
+    <div class="dost__time">
+      <h2 class="h2">Доставка й оплата</h2>
+      <p class="dost__big" aria-hidden="true">17:00</p>
+      <p class="dost__cap">Пн–Пт до 17:00, Сб до 14:00 — відправка в день замовлення</p>
+    </div>
+    <div class="dost__body">
+      <table class="dost__table">
+        <caption>Перевізники по Україні; «—» — на сайті не вказано</caption>
+        <thead>
+          <tr><th scope="col">Перевізник</th>{cols.map((c) => <th scope="col">{c}</th>)}</tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr>
+              <th scope="row">{r.name}</th>
+              {r.cells.map((c, i) => <td data-label={cols[i]}>{c}</td>)}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <ul class="dost__notes">
+        <li><strong>Кур'єр у Харкові та Ужгороді</strong> — безкоштовно від 1000 грн.</li>
+        <li><strong>Оплата:</strong> на картку, за реквізитами, LiqPay, накладений платіж; у картці товару — Monobank, Google Pay, Apple Pay.</li>
+      </ul>
+      <FutureLink class="dost__more">Усі умови доставки й оплати</FutureLink>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .dost { background: var(--color-paper); padding-block: var(--section-y); border-top: var(--hairline) solid var(--color-line); }
+  .dost__in { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-7); }
+  .dost__big {
+    margin-top: var(--space-5);
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 800; font-size: var(--text-figure); line-height: .9;
+    color: var(--color-bamboo); font-variant-numeric: tabular-nums;
+  }
+  .dost__cap { margin-top: var(--space-3); font-size: var(--text-17); max-width: 30ch; }
+  .dost__table { width: 100%; font-size: var(--text-16); font-variant-numeric: tabular-nums; }
+  .dost__table caption { caption-side: bottom; text-align: left; padding-top: var(--space-3); font-size: var(--text-14); color: var(--color-muted); }
+  .dost__table th, .dost__table td { text-align: left; vertical-align: top; }
+  .dost__table thead { display: none; }
+  .dost__table tr { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-1) var(--space-4); padding-block: var(--space-4); border-top: var(--hairline) solid var(--color-line); }
+  .dost__table tbody th { grid-column: 1 / -1; font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 700; font-size: var(--text-28); line-height: 1.1; }
+  .dost__table td::before { content: attr(data-label); display: block; font-size: var(--text-14); color: var(--color-muted); }
+  .dost__notes { display: grid; gap: var(--space-3); margin-top: var(--space-6); max-width: var(--measure); }
+  .dost__more { margin-top: var(--space-5); color: var(--color-bamboo); font-weight: 600; min-height: var(--target); }
+
+  @media (min-width: 768px) {
+    .dost__table thead { display: table-header-group; }
+    .dost__table tr { display: table-row; }
+    .dost__table th, .dost__table td { padding: var(--space-3) var(--space-3) var(--space-3) 0; border-bottom: var(--hairline) solid var(--color-line); }
+    .dost__table thead th { font-size: var(--text-14); font-weight: 600; color: var(--color-muted); }
+    .dost__table tbody th { font-size: var(--text-22); }
+    .dost__table td::before { content: none; }
+  }
+  @media (min-width: 1024px) {
+    .dost__in { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+    .dost__time { grid-column: 1 / 6; }
+    .dost__body { grid-column: 6 / 13; padding-top: var(--space-2); }
+  }
+</style>

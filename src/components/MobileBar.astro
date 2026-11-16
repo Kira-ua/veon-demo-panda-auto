@@ -1,0 +1,33 @@
+---
+// Phone only: «Подзвонити | Написати», appears once the first screen is gone (main.ts, IntersectionObserver).
+import Icon from "./Icon.astro";
+import { contacts } from "../data/site";
+---
+<div class="mbar on-dark" data-mbar data-rec="R-101,M-R004,G-R004">
+  <a class="mbar__btn" href={contacts.phones[0].href}><Icon name="phone" />Подзвонити</a>
+  <a class="mbar__btn mbar__btn--write" href="#kontakty" data-sheet-open><Icon name="chat" />Написати</a>
+</div>
+
+<style is:global>
+  .mbar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-bar);
+    display: grid; grid-template-columns: 1fr 1fr; height: var(--bar-h);
+    background: var(--color-bamboo); border-top: var(--hairline) solid var(--color-mint);
+    padding-bottom: env(safe-area-inset-bottom);
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .mbar__btn {
+    display: flex; align-items: center; justify-content: center; gap: var(--space-2);
+    font-weight: 600; font-size: var(--text-16); color: var(--color-snow); text-decoration: none;
+  }
+  .mbar__btn--write { background: var(--color-lime); color: var(--color-ink); --focus-ring: var(--color-ink); }
+  .mbar__btn:active { transform: translateY(1px); }
+  .mbar__btn:focus-visible { outline-offset: calc(-1 * var(--space-1)); }
+  /* Motion #4: hidden until the hero leaves the screen (only with JS) */
+  .js .mbar:not(.is-shown) { transform: translateY(100%); }
+  @media (max-width: 767px) {
+    body { padding-bottom: var(--bar-h); }
+  }
+  @media (min-width: 768px) { .mbar { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .mbar { transition: none; } .mbar__btn:active { transform: none; } }
+</style>

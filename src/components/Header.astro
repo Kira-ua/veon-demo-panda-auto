@@ -1,0 +1,164 @@
+---
+// Light bar: logo → #top, six items, phone as text, «Написати», UA / RU, future search, cabinet, cart. Burger under 1200px.
+import FutureLink from "./FutureLink.astro";
+import Icon from "./Icon.astro";
+import { contacts, waLink } from "../data/site";
+const SEARCH_NOTE = "Пошук з'явиться в повній версії. Зараз — надішліть артикул менеджеру";
+const nav = [
+  { href: "#pidbir", text: "Підбір", rec: "R-102" },
+  { future: true, text: "Каталог" },
+  { href: "#dostavka", text: "Доставка й оплата", rec: "R-106" },
+  { href: "#garantiia", text: "Гарантія", rec: "R-106" },
+  { href: "#sto", text: "Для СТО", rec: "R-108" },
+  { href: "#kontakty", text: "Контакти", rec: "R-101" },
+];
+const phone = contacts.phones[0];
+---
+<header id="header" class="hdr" data-rec="R-101,R-103">
+  <div class="hdr__in container">
+    <a class="hdr__logo" href="#top" aria-label="Panda Auto Parts, на початок сторінки">
+      <img src={`${import.meta.env.BASE_URL}panda-logo.svg`.replace(/\/\/+/g,"/")} alt="" width="132" height="44" />
+    </a>
+
+    <nav class="hdr__nav" aria-label="Головне меню">
+      <ul>
+        {nav.map((n) => (
+          <li>
+            {n.future
+              ? <FutureLink class="hdr__link">{n.text}</FutureLink>
+              : <a class="hdr__link link-grow" href={n.href} data-rec={n.rec}>{n.text}</a>}
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="hdr__tools">
+      <a class="hdr__phone" href={phone.href} data-rec="R-101">{phone.text}</a>
+      <a class="btn btn--secondary hdr__write" href="#kontakty" data-sheet-open data-rec="R-101,R-102">
+        <Icon name="chat" />Написати
+      </a>
+      <div class="hdr__lang" data-rec="R-104">
+        <span class="hdr__lang-on" aria-current="true" lang="uk">UA</span>
+        <FutureLink note="Російська версія — у повній версії" label="Російська версія" end>RU</FutureLink>
+      </div>
+      <div class="hdr__icons">
+        <FutureLink class="hdr__icon" note={SEARCH_NOTE} label="Пошук за артикулом" end><Icon name="search" /></FutureLink>
+        <FutureLink class="hdr__icon" label="Кабінет" end><Icon name="user" /></FutureLink>
+        <FutureLink class="hdr__icon" label="Кошик" end><Icon name="cart" /></FutureLink>
+      </div>
+    </div>
+
+    <div class="hdr__mobile">
+      <a class="hdr__round" href={phone.href} aria-label={`Подзвонити ${phone.text}`} data-rec="R-101"><Icon name="phone" /></a>
+      <button class="hdr__round hdr__burger" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Меню" data-burger>
+        <Icon name="menu" class="i-open" /><Icon name="close" class="i-close" />
+      </button>
+    </div>
+  </div>
+
+  <div class="mnav" id="mnav" data-mnav hidden>
+    <div class="mnav__in container">
+      <ul class="mnav__list">
+        {nav.map((n) => (
+          <li>
+            {n.future
+              ? <FutureLink class="mnav__link">{n.text}</FutureLink>
+              : <a class="mnav__link" href={n.href} data-rec={n.rec}>{n.text}</a>}
+          </li>
+        ))}
+      </ul>
+      <div class="mnav__contact">
+        {contacts.phones.map((p, i) => <><a class="mnav__phone" href={p.href}>{p.text}</a>{i < contacts.phones.length - 1 && <span class="visually-hidden">;</span>}</>)}
+        <a class="btn btn--secondary" href={waLink()} rel="noopener" target="_blank">WhatsApp</a>
+        <a class="btn btn--secondary" href={contacts.telegram} rel="noopener" target="_blank">Telegram</a>
+        <a class="btn btn--secondary" href={contacts.viber.href}>Viber {contacts.viber.text}</a>
+      </div>
+      <div class="mnav__more">
+        <span class="hdr__lang-on" aria-current="true" lang="uk">UA</span>
+        <FutureLink note="Російська версія — у повній версії" label="Російська версія">RU</FutureLink>
+        <FutureLink note={SEARCH_NOTE}>Пошук</FutureLink>
+        <FutureLink>Кабінет</FutureLink>
+        <FutureLink end>Кошик</FutureLink>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style is:global>
+  .hdr {
+    position: sticky; top: 0; z-index: var(--z-header);
+    background: var(--color-snow); border-bottom: var(--hairline) solid var(--color-line);
+  }
+  .hdr__in { display: flex; align-items: center; gap: var(--space-5); height: var(--header-h); }
+  .hdr__logo { display: block; flex: none; border-radius: var(--radius); }
+  .hdr__logo img { width: auto; height: 36px; }
+  .hdr__nav, .hdr__tools { display: none; }
+  .hdr__mobile { display: flex; gap: var(--space-2); margin-left: auto; }
+  .hdr__round {
+    display: inline-grid; place-items: center; width: var(--target); height: var(--target);
+    border: var(--hairline) solid var(--color-line); border-radius: var(--radius);
+    background: var(--color-snow); color: var(--color-bamboo); cursor: pointer; text-decoration: none;
+    transition: background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  }
+  .hdr__round:hover { background: var(--color-snow-hover); }
+  .hdr__round:active { transform: translateY(1px); }
+  .hdr__burger .i-close { display: none; }
+  .hdr__burger[aria-expanded="true"] .i-open { display: none; }
+  .hdr__burger[aria-expanded="true"] .i-close { display: block; }
+  html:not(.js) .hdr__burger { display: none; }
+
+  .mnav {
+    position: absolute; left: 0; right: 0; top: 100%;
+    max-height: calc(100dvh - var(--header-h)); overflow-y: auto;
+    background: var(--color-snow); border-bottom: var(--hairline) solid var(--color-line);
+  }
+  .mnav[hidden] { display: none; }
+  .mnav__in { display: grid; gap: var(--space-6); padding-block: var(--space-5) var(--space-7); }
+  .mnav__list { display: grid; }
+  .mnav__link {
+    display: flex; align-items: center; min-height: var(--control);
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 700; font-size: var(--text-28);
+    text-decoration: none; border-bottom: var(--hairline) solid var(--color-line);
+  }
+  .mnav__link.future-link { color: var(--color-muted); text-decoration: underline dashed var(--hairline); text-underline-offset: 0.25em; }
+  .mnav__contact { display: grid; gap: var(--space-3); }
+  .mnav__phone {
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 700; font-size: var(--text-32);
+    color: var(--color-bamboo); text-decoration: none; min-height: var(--target); display: flex; align-items: center;
+  }
+  .mnav__more { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3) var(--space-5); color: var(--color-muted); font-size: var(--text-16); }
+  .mnav__more .future-link { min-height: var(--target); }
+
+  @media (min-width: 768px) {
+    .hdr__logo img { height: 44px; }
+  }
+
+  @media (min-width: 1200px) {
+    .hdr__in { gap: var(--space-5); }
+    .hdr__mobile, .mnav { display: none !important; }
+    .hdr__nav { display: block; min-width: 0; }
+    .hdr__nav ul { display: flex; gap: var(--space-5); }
+    .hdr__link {
+      font-size: var(--text-15); font-weight: 500; white-space: nowrap; color: var(--color-ink);
+      display: inline-flex; align-items: center; min-height: var(--target);
+    }
+    .hdr__link.link-grow::after { bottom: var(--space-2); }
+    .hdr__nav .future-link { color: var(--color-muted); }
+    .hdr__tools { display: flex; align-items: center; gap: var(--space-4); margin-left: auto; }
+    .hdr__phone {
+      font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 700; font-size: var(--text-22);
+      color: var(--color-bamboo); text-decoration: none; white-space: nowrap;
+      display: inline-flex; align-items: center; min-height: var(--target);
+    }
+    .hdr__phone:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+    .hdr__write { min-height: var(--target); padding-inline: var(--space-4); }
+    .hdr__lang { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-14); color: var(--color-muted); }
+    .hdr__lang-on { font-weight: 700; color: var(--color-ink); }
+    .hdr__icons { display: flex; align-items: center; }
+    .hdr__icons .hdr__icon { width: var(--target); height: var(--target); justify-content: center; color: var(--color-muted); text-decoration: none; }
+  }
+  @media (min-width: 1360px) {
+    .hdr__in, .hdr__nav ul { gap: var(--space-6); }
+    .hdr__link { font-size: var(--text-16); }
+  }
+</style>

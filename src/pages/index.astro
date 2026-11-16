@@ -1,0 +1,48 @@
+---
+// Panda Auto: the only page of the demo. Sections and ids follow design/concept.md (veon-concept).
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Dovira from "../components/Dovira.astro";
+import Pidbir from "../components/Pidbir.astro";
+import Hrupy from "../components/Hrupy.astro";
+import Dostavka from "../components/Dostavka.astro";
+import Garantiia from "../components/Garantiia.astro";
+import Sto from "../components/Sto.astro";
+import Kontakty from "../components/Kontakty.astro";
+import Footer from "../components/Footer.astro";
+import ContactSheet from "../components/ContactSheet.astro";
+import MobileBar from "../components/MobileBar.astro";
+import { contacts, points, socials } from "../data/site";
+
+const title = "Запчастини для китайських авто та електромобілів — Panda Auto Parts";
+const description = "Запчастини до Chery, Geely, BYD, Zeekr, Haval, Tesla, VW ID. Підбір за VIN через менеджера, відправка в день замовлення до 17:00. Ужгород, Харків.";
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "AutoPartsStore",
+  name: "Panda Auto",
+  telephone: contacts.phones.map((p) => p.href.replace("tel:", "")),
+  email: contacts.email.text,
+  sameAs: socials.map((s) => s.href),
+  location: points.map((p) => ({
+    "@type": "Place",
+    name: `Panda Auto, ${p.city}`,
+    address: { "@type": "PostalAddress", addressLocality: p.city, streetAddress: p.address, addressCountry: "UA" },
+  })),
+};
+---
+<Base lang="uk" title={title} description={description}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <Header slot="header" />
+  <Hero />
+  <Dovira />
+  <Pidbir />
+  <Hrupy />
+  <Dostavka />
+  <Garantiia />
+  <Sto />
+  <Kontakty />
+  <Footer slot="footer" />
+  <ContactSheet slot="after" />
+  <MobileBar slot="after" />
+</Base>

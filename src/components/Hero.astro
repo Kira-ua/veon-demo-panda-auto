@@ -1,0 +1,113 @@
+---
+// #top: bamboo field. H1 left, wall of model names right (≥1024), brand index at the foot with the EV group apart.
+import ModelWall from "./ModelWall.astro";
+import Icon from "./Icon.astro";
+import { brands, contacts } from "../data/site";
+const china = brands.filter((b) => b.group === "china");
+const ev = brands.filter((b) => b.group === "ev");
+const phone = contacts.phones[0];
+const strip = [brands.filter((b) => b.group === "china"), ev].map((list) => list.flatMap((b) => [b.name, ...b.models]).join("   "));
+---
+<section id="top" class="hero on-dark" data-rec="R-105,R-103">
+  <div class="hero__in container">
+    <div class="hero__text">
+      <h1 class="hero__h1">Запчастини для китайських авто та електромобілів</h1>
+      <p class="hero__lede">
+        <span class="hero__lede-lg">Від Chery Amulet до Zeekr 001. Надішліть VIN — менеджер перевірить сумісність, а відправимо в день замовлення до 17:00</span>
+        <span class="hero__lede-sm">Надішліть VIN — підберемо деталь. Відправка в день замовлення до 17:00</span>
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--primary hero__cta" href="#kontakty" data-sheet-open data-rec="R-102">Підібрати деталь за VIN</a>
+        <a class="btn btn--outline hero__call" href={phone.href} data-rec="R-101,M-R004,G-R004"><Icon name="phone" />Подзвонити {phone.text}</a>
+      </div>
+      <p class="hero__hint">VIN — 17 знаків, є в техпаспорті. <a class="link" href="#kontakty" data-sheet-open data-rec="R-102">Знаєте артикул? Надішліть його менеджеру</a></p>
+    </div>
+
+    <a class="hero__strip" href="#pidbir" aria-label="Усі 120 моделей — у підборі нижче">
+      {strip.map((l) => <span class="hero__strip-line" aria-hidden="true">{l}</span>)}
+    </a>
+
+    <div class="hero__wall"><ModelWall /></div>
+
+    <nav class="hero__index" aria-label="Марки авто">
+      <ul class="hero__brands">
+        {china.map((b) => <li><a class="hero__brand link-grow" href={`#pidbir-${b.slug}`} data-pick={b.slug}>{b.label}</a></li>)}
+      </ul>
+      <div class="hero__ev">
+        <span class="hero__ev-label">Електромобілі:</span>
+        <ul class="hero__brands">
+          {ev.map((b) => <li><a class="hero__brand link-grow" href={`#pidbir-${b.slug}`} data-pick={b.slug}>{b.label}</a></li>)}
+        </ul>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<style is:global>
+  .hero { background: var(--color-bamboo); color: var(--color-snow); }
+  .hero__in {
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6);
+    padding-block: var(--space-5) var(--space-6);
+  }
+  .hero__h1 {
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 800;
+    font-size: var(--text-hero); line-height: 1; letter-spacing: 0;
+    overflow-wrap: break-word; min-width: 0; max-width: 14ch; text-wrap: balance;
+  }
+  .hero__lede { margin-top: var(--space-4); font-size: var(--text-17); line-height: 1.5; color: var(--color-mint); max-width: 44ch; }
+  .hero__lede-lg { display: none; }
+  .hero__actions { display: grid; gap: var(--space-3); margin-top: var(--space-5); }
+  .hero__call { min-height: var(--control); }
+  .hero__hint { margin-top: var(--space-4); font-size: var(--text-15); color: var(--color-mint); max-width: 52ch; }
+  .hero__hint .link { color: var(--color-snow); }
+  .hero__hint .link:hover { color: var(--color-lime); }
+  .hero__wall { display: none; }
+  .hero__strip { display: grid; gap: var(--space-1); text-decoration: none; border-radius: var(--radius); margin-inline: calc(-1 * var(--space-1)); padding-inline: var(--space-1); }
+  .hero__strip-line {
+    display: block; overflow: hidden; white-space: pre;
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 500; font-size: var(--text-20); line-height: 1.25;
+    color: var(--color-mint);
+  }
+  .hero__strip:hover .hero__strip-line { color: var(--color-snow); }
+  .hero__index { display: grid; gap: var(--space-3); border-top: var(--hairline) solid var(--color-mint); padding-top: var(--space-4); }
+  .hero__brands { display: flex; flex-wrap: wrap; column-gap: var(--space-4); }
+  .hero__brand {
+    display: inline-flex; align-items: center; min-height: var(--target);
+    font-family: var(--font-display); font-stretch: var(--wdth-display); font-weight: 600; font-size: var(--text-20);
+    color: var(--color-snow); white-space: nowrap;
+  }
+  .hero__brand:hover { color: var(--color-lime); }
+  .hero__brand.link-grow::after { bottom: var(--space-2); }
+  .hero__ev { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-4); }
+  .hero__ev-label { font-size: var(--text-15); color: var(--color-mint); }
+
+  @media (min-width: 560px) {
+    .hero__actions { grid-template-columns: max-content max-content; }
+    .hero__lede-sm { display: none; }
+    .hero__lede-lg { display: inline; }
+    .hero__lede { font-size: var(--text-20); }
+  }
+  @media (min-width: 1024px) {
+    .hero__in {
+      grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--space-6);
+      grid-template-rows: minmax(0, 1fr) auto;
+      min-height: clamp(560px, calc(100svh - var(--header-h) - 72px), 760px);
+      padding-block: var(--space-8) var(--space-5);
+    }
+    .hero__strip { display: none; }
+    .hero__text { grid-column: 1 / 8; grid-row: 1; align-self: center; }
+    .hero__h1 { max-width: none; }
+    .hero__wall {
+      display: block; grid-column: 8 / 13; grid-row: 1; position: relative; overflow: hidden;
+      margin-top: calc(-1 * var(--space-8)); margin-bottom: calc(-1 * var(--space-6));
+    }
+    .hero__wall .wall { position: absolute; inset: 0 0 auto 0; }
+    .hero__index {
+      grid-column: 1 / 13; grid-row: 2;
+      grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: start;
+    }
+    .hero__index > .hero__brands { grid-column: 1 / 9; }
+    .hero__ev { grid-column: 9 / 13; border-left: var(--hairline) solid var(--color-mint); padding-left: var(--space-5); }
+    .hero__brand { font-size: var(--text-28); }
+  }
+</style>
